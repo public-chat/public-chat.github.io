@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الدردشة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="https://i.ibb.co/zHt9VWNm/chat.png" type="image/jpeg">
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
+
+:root {
+    --primary-color: #00838f;
+    --secondary-color: #00695c;
+    --accent-color: #ff8f00;
+    --danger-color: #d32f2f;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.85);
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --bg-gradient: linear-gradient(135deg, #1a2f35, #0d2620);
+    --card-bg: rgba(15, 30, 35, 0.85);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --shadow-soft: 0 5px 15px rgba(0, 0, 0, 0.3);
+    --shadow-strong: 0 8px 25px rgba(0, 0, 0, 0.4);
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 20px;
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+}
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Tajawal', sans-serif;
+    outline: none;
+}
+
+body {
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-x: hidden;
+    padding: 20px;
+    padding-top: 90px;
+    padding-bottom: 90px;
+    transition: background var(--transition-normal);
+}
+
+.chat-header {
+    background: rgba(10, 25, 30, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+    box-shadow: var(--shadow-strong);
+}
+
+.chat-header h1 {
+    font-size: 1.6rem;
+    background: linear-gradient(90deg, #ffa000, #ff6d00);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    animation: pulse 2s infinite;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-header h1 i {
+    color: #ffa000;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.logout-button {
+    background: linear-gradient(45deg, var(--accent-color), #ff6d00);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--shadow-soft);
+}
+
+.logout-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.logout-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+#chat-container {
+    flex: 1;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    overflow-y: auto;
+    padding: 20px;
+    padding-bottom: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) transparent;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-strong);
+    border: 1px solid var(--border-color);
+}
+
+#chat-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+#chat-container::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+.message {
+    display: flex;
+    align-items: flex-start;
+    background: rgba(15, 30, 35, 0.7);
+    margin-bottom: 20px;
+    padding: 16px;
+    border-radius: var(--border-radius-md);
+    max-width: 100%;
+    word-wrap: break-word;
+    box-shadow: var(--shadow-soft);
+    transition: all var(--transition-normal);
+    position: relative;
+    animation: messageAppear 0.4s ease-out;
+    border: 1px solid var(--border-color);
+    justify-content: flex-start;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.message:hover {
+    background: rgba(20, 40, 45, 0.8);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+@keyframes messageAppear {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.message img.avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-left: 15px;
+    border: 2px solid var(--accent-color);
+    object-fit: cover;
+    transition: transform var(--transition-normal);
+    box-shadow: var(--shadow-soft);
+}
+
+.message:hover img.avatar {
+    transform: scale(1.1);
+}
+
+.message img.uploaded-image,
+.message video.uploaded-image {
+    width: 100%;
+    max-width: 400px;
+    border-radius: var(--border-radius-md);
+    margin-top: 10px;
+    box-shadow: var(--shadow-soft);
+    transition: transform var(--transition-normal);
+}
+
+.message img.uploaded-image:hover,
+.message video.uploaded-image:hover {
+    transform: scale(1.03);
+    box-shadow: var(--shadow-strong);
+}
+
+.message .text {
+    flex: 1;
+    margin-left: 10px;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.message strong {
+    font-size: 16px;
+    color: var(--accent-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.admin-name {
+    color: #ffa000 !important;
+}
+
+.admin-label {
+    background: linear-gradient(45deg, #ffa000, #ff6d00);
+    color: white;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    margin-right: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.timestamp {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+.message-content {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: var(--border-radius-sm);
+    margin: 5px 0;
+    line-height: 1.5;
+    font-size: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-width: 100%;
+    overflow-wrap: break-word;
+}
+
+.options {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 10px;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    transform: translateY(5px);
+}
+
+.message:hover .options {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.options button {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    font-size: 12px;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.options button:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.05);
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: var(--danger-color) !important;
+    border-color: var(--danger-color);
+}
+
+#typing-indicator {
+    position: fixed;
+    bottom: 85px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 14px;
+    color: var(--accent-color);
+    font-style: italic;
+    animation: blink 1s infinite;
+    padding: 5px 0;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+#message-form {
+    display: flex;
+    padding: 15px 20px;
+    background: rgba(10, 25, 30, 0.9);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+    gap: 10px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    border-top: 1px solid var(--border-color);
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+#message-input {
+    flex: 1;
+    width: 150px;
+    padding: 15px;
+    font-size: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    color: white;
+    transition: all var(--transition-normal);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+    maxlength: 1000;
+}
+
+#message-input:focus {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(255, 143, 0, 0.2);
+}
+
+#message-input::placeholder {
+    color: var(--text-muted);
+}
+
+.form-button {
+    background: linear-gradient(45deg, var(--accent-color), #ff6d00);
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    font-size: 18px;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-soft);
+}
+
+.form-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.form-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+#record-button {
+    order: 1;
+}
+
+#message-input { order: 2; }
+#upload-file-button { order: 3; }
+#send-button { order: 4; }
+
+audio {
+    border-radius: var(--border-radius-md);
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-soft);
+}
+
+audio:focus {
+    outline: none;
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        padding: 10px;
+        padding-top: 80px;
+        padding-bottom: 80px;
+    }
+    
+    #chat-container {
+        padding: 15px;
+        border-radius: var(--border-radius-md);
+    }
+    
+    .message {
+        padding: 12px;
+        font-size: 14px;
+    }
+    
+    .message img.avatar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .message img.uploaded-image,
+    .message video.uploaded-image {
+        max-width: 300px;
+    }
+    
+    .form-button {
+        width: 45px;
+        height: 45px;
+        padding: 10px;
+    }
+    
+    #message-input {
+        padding: 10px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .chat-header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .logout-button {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    #chat-container {
+        padding: 10px;
+        border-radius: var(--border-radius-sm);
+    }
+    
+    .message {
+        padding: 10px;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+    
+    .message img.avatar {
+        width: 35px;
+        height: 35px;
+        margin-left: 10px;
+    }
+    
+    .message img.uploaded-image,
+    .message video.uploaded-image {
+        max-width: 250px;
+    }
+    
+    .form-button {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+    </style>
+ 
+ <script src="https://sight-rw-that-boots.trycloudflare.com/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <div class="chat-header">
+        <h1>
+            <i class="fas fa-comments"></i>
+            الدردشة
+        </h1>
+        <button class="logout-button" id="logout-button">
+            <i class="fas fa-sign-out-alt"></i>
+            تسجيل الخروج
+        </button>
+    </div>
+    <div id="chat-container">
+       
+    </div>
+    <div id="typing-indicator"></div>
+    <form id="message-form">
+        <button type="button" id="record-button" class="form-button">
+            <i class="fas fa-microphone"></i>
+        </button>
+        <input type="text" id="message-input" autocomplete="off" placeholder="مراسلة..." maxlength="1000">
+        <button id="upload-file-button" type="button" class="form-button">
+            <i class="fas fa-paperclip"></i>
+        </button>
+        <button type="submit" id="send-button" class="form-button">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+        <input type="file" id="file-input" accept="image/*,video/*" style="display: none;">
+    </form>
+ 
+    <script>
+        const SERVER_URL = 'https://sight-rw-that-boots.trycloudflare.com';
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        const token = localStorage.getItem('token');
+        if (!token) window.location.href = '/login';
+        const socket = io(SERVER_URL, {
+            query: { token: token }
+        });
+
+        socket.on('connect_error', () => {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        });
+
+        socket.on('disconnect', (reason) => {
+            if (reason === 'io server disconnect' || reason === 'io client disconnect') {
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            }
+        });
+
+        socket.on('connect', () => {
+            socket.on('invalid_token', () => {
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            });
+        });
+
+        let notificationsAllowed = false;
+        document.addEventListener('DOMContentLoaded', () => {
+            requestNotificationPermission();
+        });
+
+        async function requestNotificationPermission() {
+            try {
+                if ('Notification' in window) {
+                    const permission = await Notification.requestPermission();
+                    notificationsAllowed = permission === 'granted';
+                }
+            } catch (error) {
+                console.error('خطأ في طلب الإذن بالإشعارات:', error);
+            }
+        }
+
+        function sendNotification(message) {
+            if (!notificationsAllowed || document.visibilityState === 'visible') {
+                return;
+            }
+
+            try {
+                const username = message.username;
+                let messageText = '';
+                
+                if (message.message.includes('<audio') || message.message.includes('<img') || message.message.includes('<video')) {
+                    if (message.message.includes('<audio')) {
+                        messageText = 'أرسل تسجيلًا صوتيًا';
+                    } else if (message.message.includes('<img')) {
+                        messageText = 'أرسل صورة';
+                    } else if (message.message.includes('<video')) {
+                        messageText = 'أرسل فيديو';
+                    }
+                } else {
+                    messageText = message.message.length > 50 ? message.message.substring(0, 50) + '...' : message.message;
+                }
+
+                const notificationOptions = {
+                    body: messageText,
+                    icon: `${SERVER_URL}/uploads/pics/${username}.jpg`,
+                    tag: 'new-message',
+                    requireInteraction: false,
+                    vibrate: [200, 100, 200]
+                };
+
+                const notification = new Notification(`رسالة جديدة من ${username}`, notificationOptions);
+                
+                notification.onclick = function() {
+                    window.focus();
+                    this.close();
+                };
+                
+                setTimeout(() => notification.close(), 5000);
+            } catch (error) {
+                console.error('خطأ في إرسال الإشعار:', error);
+            }
+        }
+        
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                if ('Notification' in window) {
+                    const notifications = document.querySelectorAll('.notification');
+                    notifications.forEach(notification => notification.close());
+                }
+            }
+        });
+
+        document.getElementById('logout-button').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        });
+        document.getElementById('record-button').addEventListener('click', toggleRecording);
+        async function toggleRecording() {
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    setupMediaRecorder();
+                    mediaRecorder.start();
+                    isRecording = true;
+                    updateRecordButton(true);
+                } catch (err) {
+                    console.error('Error accessing microphone:', err);
+                }
+            } else {
+                mediaRecorder.stop();
+                isRecording = false;
+                updateRecordButton(false);
+            }
+        }
+        function setupMediaRecorder() {
+            audioChunks = [];
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'recording.mp3');
+                formData.append('username', socket.username);
+                try {
+                    const response = await fetch(`${SERVER_URL}/upload-voice`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await response.json();
+                    const audioMessage = {
+                        id: generateUUID(),
+                        username: socket.username,
+                        message: `<audio controls style="width: 200px;"><source src="${data.url}" type="audio/mp3"></audio>`,
+                        timestamp: new Date().toLocaleTimeString()
+                    };
+                    socket.emit('new message', audioMessage);
+                } catch (error) {
+                    console.error('Upload error:', error);
+                }
+            };
+        }
+        function updateRecordButton(recording) {
+            const button = document.getElementById('record-button');
+            button.style.background = recording ? 'linear-gradient(45deg, var(--danger-color), #c62828)' : 'linear-gradient(45deg, var(--accent-color), #ff6d00)';
+            button.innerHTML = recording ? '<i class="fas fa-stop"></i>' : '<i class="fas fa-microphone"></i>';
+        }
+        socket.on('load messages', (messages) => {
+            messages.forEach(addMessageToChat);
+            scrollToBottom();
+        });
+        socket.on('new message', (message) => {
+            addMessageToChat(message);
+            scrollToBottom();
+            if (message.username !== socket.username) {
+                sendNotification(message);
+                playNotificationSound();
+            }
+        });
+        socket.on('new file', (data) => {
+            addMessageToChat(data);
+            scrollToBottom();
+            if (data.username !== socket.username) {
+                sendNotification(data);
+                playNotificationSound();
+            }
+        });
+
+        function playNotificationSound() {
+            try {
+                const audio = new Audio(`${SERVER_URL}/uploads/web-notification/sendsound.mp3`);
+                audio.volume = 0.5;
+                audio.play();
+            } catch (err) {
+                console.error('خطأ في تشغيل صوت الإشعار:', err);
+            }
+        }
+
+        let typingTimeout;
+        socket.on('typing', (data) => {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (data.username !== socket.username) {
+                typingIndicator.textContent = `${data.username} يكتب...`;
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => {
+                    typingIndicator.textContent = '';
+                }, 1000);
+            }
+        });
+        socket.on('delete message', (id) => {
+            const messageElement = document.querySelector(`[data-id="${id}"]`);
+            if (messageElement) {
+                messageElement.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => messageElement.remove(), 300);
+            }
+        });
+        socket.on('refresh page', () => {
+            window.location.reload();
+        });
+        document.getElementById('message-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            sendMessage();
+        });
+        document.getElementById('message-input').addEventListener('input', () => {
+            socket.emit('typing', { username: socket.username });
+        });
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            if (message) {
+                if (message.length > 1000) {
+                    alert('الحد الأقصى لعدد الأحرف هو 1000 حرف');
+                    return;
+                }
+                const messageData = {
+                    id: generateUUID(),
+                    username: socket.username,
+                    message: message,
+                    timestamp: new Date().toLocaleTimeString()
+                };
+                socket.emit('new message', messageData);
+                input.value = '';
+            }
+        }
+        document.getElementById('upload-file-button').addEventListener('click', () => {
+            document.getElementById('file-input').click();
+        });
+        document.getElementById('file-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('username', socket.username);
+                fetch(`${SERVER_URL}/upload`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const fileData = {
+                        id: generateUUID(),
+                        username: socket.username,
+                        message: `<${data.type} src="${data.url}" controls class="uploaded-image"></${data.type}>`,
+                        timestamp: new Date().toLocaleTimeString()
+                    };
+                    socket.emit('new file', fileData);
+                })
+                .catch(error => {
+                    console.error('Error uploading file:', error);
+                });
+            }
+        });
+        function addMessageToChat(message) {
+            const chatContainer = document.getElementById('chat-container');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.setAttribute('data-id', message.id);
+            const avatar = `<img src="${SERVER_URL}/uploads/pics/${message.username}.jpg" alt="${message.username}" class="avatar" onerror="this.src='https://ui-avatars.com/api/?name=${message.username}&background=random&color=fff'">`;
+            const isAdmin = message.username === "coder";
+            const usernameContent = isAdmin
+                ? `<strong class="admin-name">${message.username} <i class="fas fa-crown"></i></strong>
+                   <div class="admin-label">admin</div>`
+                : `<strong>${message.username}</strong>`;
+            const messageContent = `
+                ${avatar}
+                <div class="text">
+                    <div class="message-header">
+                        ${usernameContent}
+                        <span class="timestamp">${message.timestamp}</span>
+                    </div>
+                    <div class="message-content">${message.message}</div>
+                    <div class="options">
+                        <button class="delete-btn" data-id="${message.id}">
+                            <i class="fas fa-trash"></i> حذف
+                        </button>
+                    </div>
+                </div>
+            `;
+            messageElement.innerHTML = messageContent;
+            chatContainer.appendChild(messageElement);
+            
+            setTimeout(() => {
+                messageElement.style.opacity = '1';
+                messageElement.style.transform = 'translateY(0)';
+            }, 10);
+        }
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+        function scrollToBottom() {
+            const chatContainer = document.getElementById('chat-container');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.delete-btn')) {
+                const messageId = e.target.closest('.delete-btn').getAttribute('data-id');
+                if (messageId) {
+                    socket.emit('delete message', messageId);
+                }
+            }
+        });
+        document.styleSheets[0].insertRule(`
+            @keyframes fadeOut {
+                to { opacity: 0; transform: translateY(20px); }
+            }
+        `, 0);
+        document.styleSheets[0].insertRule(`
+            @keyframes slideOut {
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `, 0);
+        const dropZone = document.getElementById('chat-container');
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.border = '2px dashed var(--primary-color)';
+        });
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.style.border = 'none';
+        });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.style.border = 'none';
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('file-input').files = files;
+                document.getElementById('file-input').dispatchEvent(new Event('change'));
+            }
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        function observeMessages() {
+            document.querySelectorAll('.message').forEach(message => {
+                observer.observe(message);
+            });
+        }
+        observeMessages();
+    </script>
+</body>
+</html>

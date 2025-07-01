@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://i.ibb.co/3mDvKrMT/add-friend.png" type="image/jpeg">
+    <title>إنشاء حساب جديد</title>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
+    :root {
+      --primary-color: #00838f;
+      --secondary-color: #00695c;
+      --accent-color: #ff8f00;
+      --danger-color: #d32f2f;
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.85);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --bg-gradient: linear-gradient(135deg, #1a2f35, #0d2620);
+      --card-bg: rgba(15, 30, 35, 0.85);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --shadow-soft: 0 5px 15px rgba(0, 0, 0, 0.3);
+      --shadow-strong: 0 8px 25px rgba(0, 0, 0, 0.4);
+      --border-radius-sm: 8px;
+      --border-radius-md: 12px;
+      --border-radius-lg: 20px;
+      --transition-fast: 0.2s ease;
+      --transition-normal: 0.3s ease;
+    }
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .signup-container {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-strong);
+      width: 350px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .signup-container h2 {
+      margin-bottom: 25px;
+      background: linear-gradient(90deg, var(--accent-color), #ff6d00);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .signup-container label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .signup-container input[type="text"],
+    .signup-container input[type="password"],
+    .signup-container input[type="email"],
+    .signup-container input[type="file"] {
+      width: 93%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: var(--border-radius-sm);
+      border: 1px solid var(--border-color);
+      background-color: rgba(0, 0, 0, 0.3);
+      color: var(--text-primary);
+      font-size: 14px;
+      transition: all var(--transition-fast);
+    }
+    .signup-container input:focus {
+      border-color: var(--accent-color);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(255, 143, 0, 0.2);
+    }
+    .signup-container button {
+      width: 100%;
+      padding: 12px;
+      border-radius: var(--border-radius-sm);
+      border: none;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: var(--text-primary);
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      box-shadow: var(--shadow-soft);
+    }
+    .signup-container button:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-strong);
+    }
+    .signup-container button:active {
+      transform: translateY(1px);
+    }
+    .signup-container button:disabled {
+      background: rgba(255, 255, 255, 0.1);
+      cursor: not-allowed;
+    }
+    .signup-container input[type="file"] {
+      padding: 10px;
+      cursor: pointer;
+    }
+    .signup-container input[type="file"]::file-selector-button {
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: var(--text-primary);
+      border: none;
+      padding: 8px 12px;
+      border-radius: var(--border-radius-sm);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .signup-container input[type="file"]::file-selector-button:hover {
+      background: linear-gradient(45deg, #00796b, #004d40);
+    }
+    .login-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+    .login-link a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: bold;
+      transition: color var(--transition-fast);
+    }
+    .login-link a:hover {
+      color: #ff6d00;
+      text-decoration: underline;
+    }
+    .verification-section {
+      margin: 15px 0;
+      border-top: 1px solid var(--border-color);
+      padding-top: 15px;
+    }
+    .verification-input {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .verification-input input {
+      width: 100%;
+      flex: 3;
+      padding: 12px;
+      border-radius: var(--border-radius-sm);
+      border: 1px solid var(--border-color);
+      background-color: rgba(0, 0, 0, 0.3);
+      color: var(--text-primary);
+      font-size: 14px;
+      transition: all var(--transition-fast);
+    }
+    .verification-input button {
+      flex: 1;
+      padding: 12px;
+      border-radius: var(--border-radius-sm);
+      font-size: 14px;
+      height: 46px;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: var(--text-primary);
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      box-shadow: var(--shadow-soft);
+    }
+    .verification-input button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-strong);
+    }
+    .countdown {
+      color: var(--accent-color);
+      font-weight: bold;
+      text-align: center;
+      margin: 5px 0;
+    }
+    .error-message {
+      color: var(--danger-color);
+      font-size: 12px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      display: none;
+    }
+    @media (max-width: 576px) {
+      .signup-container {
+        width: 90%;
+        padding: 25px 15px;
+      }
+      .signup-container h2 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h2>إنشاء حساب جديد</h2>
+        <form id="signup-form">
+            <label for="username">اسم المستخدم:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <div id="email-section">
+                <label for="email">البريد الإلكتروني:</label>
+                <input type="email" id="email" name="email" required>
+                <div id="email-error" class="error-message"></div>
+            </div>
+            
+            <label for="password">كلمة المرور:</label>
+            <input type="password" id="password" name="password" required minlength="8">
+            
+            <label for="avatar">صورة الحساب:</label>
+            <input type="file" id="avatar" name="avatar" accept="image/*" required>
+            
+            <div class="verification-section">
+                <label for="verification-code">كود التحقق:</label>
+                <div class="verification-input">
+                    <input type="text" id="verification-code" name="verification-code" required>
+                    <button type="button" id="send-code-btn">إرسال الكود</button>
+                </div>
+                <div id="countdown" class="countdown" style="display: none;"></div>
+            </div>
+            
+            <button type="submit" id="signup-button" disabled>إنشاء حساب</button>
+        </form>
+        <div class="login-link">
+            <p>هل تملك حساب بالفعل؟ <a href="/login">تسجيل الدخول</a></p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://sight-rw-that-boots.trycloudflare.com';
+        
+        if (localStorage.getItem('token')) {
+            window.location.href = '/chat';
+        }
+        
+        const passwordInput = document.getElementById('password');
+        const signupButton = document.getElementById('signup-button');
+        const emailInput = document.getElementById('email');
+        const emailError = document.getElementById('email-error');
+        const sendCodeBtn = document.getElementById('send-code-btn');
+        
+        let verificationCode = '';
+        let countdownInterval;
+        
+        passwordInput.addEventListener('input', function() {
+            if (passwordInput.value.length >= 8) {
+                signupButton.disabled = false;
+            } else {
+                signupButton.disabled = true;
+            }
+        });
+        
+        function validateEmail() {
+            const email = emailInput.value;
+            if (!email) {
+                emailError.textContent = 'البريد الإلكتروني مطلوب';
+                emailError.style.display = 'block';
+                return false;
+            }
+            
+            const allowedDomains = ['gmail.com', 'icloud.com'];
+            const allowedPatterns = [/@hotmail\..*$/, /@outlook\..*$/];
+            
+            const domain = email.split('@')[1];
+            let isValid = false;
+            
+            if (allowedDomains.includes(domain)) {
+                isValid = true;
+            } else {
+                for (const pattern of allowedPatterns) {
+                    if (pattern.test(email)) {
+                        isValid = true;
+                        break;
+                    }
+                }
+            }
+            
+            if (!isValid) {
+                emailError.textContent = 'النطاقات المسموح بها فقط: gmail.com, icloud.com, hotmail.*, outlook.*';
+                emailError.style.display = 'block';
+                return false;
+            }
+            
+            emailError.style.display = 'none';
+            return true;
+        }
+        
+        sendCodeBtn.addEventListener('click', function() {
+            if (!validateEmail()) return;
+            
+            verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            fetch(`${API_BASE_URL}/send-verification`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    email: emailInput.value, 
+                    code: verificationCode 
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    startCountdown();
+                } else {
+                    alert('فشل إرسال كود التحقق: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('حدث خطأ أثناء إرسال كود التحقق');
+                console.error(error);
+            });
+        });
+        
+        function startCountdown() {
+            let seconds = 60;
+            document.getElementById('countdown').style.display = 'block';
+            sendCodeBtn.disabled = true;
+            
+            countdownInterval = setInterval(() => {
+                document.getElementById('countdown').textContent = `يمكنك طلب كود جديد بعد ${seconds} ثانية`;
+                seconds--;
+                
+                if (seconds < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('countdown').style.display = 'none';
+                    sendCodeBtn.disabled = false;
+                }
+            }, 1000);
+        }
+        
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            if (!validateEmail()) return;
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const avatar = document.getElementById('avatar').files[0];
+            const code = document.getElementById('verification-code').value;
+            
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('avatar', avatar);
+            formData.append('code', code);
+            
+            fetch(`${API_BASE_URL}/signup`, {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'حدث خطأ ما');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    window.location.href = '/chat';
+                }
+            })
+            .catch(error => {
+                alert(`${error.message}`);
+            });
+        });
+    </script>
+</body>
+</html>

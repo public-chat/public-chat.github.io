@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>public chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://i.ibb.co/spkj9CgQ/star-1.png" type="image/jpeg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
+
+        :root {
+            --primary-color: #00838f;
+            --secondary-color: #00695c;
+            --accent-color: #ff8f00;
+            --danger-color: #d32f2f;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.85);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --bg-gradient: linear-gradient(135deg, #1a2f35, #0d2620);
+            --card-bg: rgba(15, 30, 35, 0.85);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-soft: 0 5px 15px rgba(0, 0, 0, 0.3);
+            --shadow-strong: 0 8px 25px rgba(0, 0, 0, 0.4);
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 20px;
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            outline: none;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-x: hidden;
+            padding: 20px;
+            padding-top: 90px;
+            padding-bottom: 90px;
+            transition: background var(--transition-normal);
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-strong);
+            text-align: center;
+            margin: 20px 0;
+            border: 1px solid var(--border-color);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--accent-color), #ff6d00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .description {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: var(--text-secondary);
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+            font-size: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 15px;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--border-color);
+            transition: all var(--transition-fast);
+        }
+
+        .feature:hover {
+            background: rgba(0, 0, 0, 0.4);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .feature i {
+            margin-left: 8px;
+            color: var(--accent-color);
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 15px;
+        }
+
+        .top-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .btn i {
+            margin-left: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            flex: 1;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            flex: 1;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-large {
+            width: 100%;
+            background: linear-gradient(45deg, var(--accent-color), #ff6d00);
+            color: white;
+            box-shadow: var(--shadow-soft);
+            padding: 18px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .warning {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: rgba(211, 47, 47, 0.2);
+            border-right: 4px solid var(--danger-color);
+            border-radius: var(--border-radius-sm);
+            color: #ffcdd2;
+            text-align: right;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .developers {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .developers h3 {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            font-size: 22px;
+        }
+
+        .dev-cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .dev-card {
+            background: rgba(15, 30, 35, 0.7);
+            border-radius: var(--border-radius-md);
+            padding: 20px;
+            width: 180px;
+            text-align: center;
+            transition: all var(--transition-normal);
+            border: 1px solid var(--border-color);
+            text-decoration: none;
+            color: white;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .dev-card:hover {
+            transform: translateY(-5px);
+            background: rgba(20, 40, 45, 0.8);
+            box-shadow: var(--shadow-strong);
+        }
+
+        .dev-card img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 3px solid var(--accent-color);
+        }
+
+        .dev-card h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: var(--accent-color);
+        }
+
+        .dev-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .floating-bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 8s infinite;
+            opacity: 0.5;
+        }
+
+        .bubble:nth-child(1) {
+            width: 60px;
+            height: 60px;
+            left: 10%;
+            animation-duration: 12s;
+        }
+
+        .bubble:nth-child(2) {
+            width: 80px;
+            height: 80px;
+            left: 20%;
+            animation-duration: 10s;
+            animation-delay: 1s;
+        }
+
+        .bubble:nth-child(3) {
+            width: 50px;
+            height: 50px;
+            left: 35%;
+            animation-duration: 14s;
+            animation-delay: 2s;
+        }
+
+        .bubble:nth-child(4) {
+            width: 70px;
+            height: 70px;
+            left: 50%;
+            animation-duration: 13s;
+            animation-delay: 0s;
+        }
+
+        .bubble:nth-child(5) {
+            width: 65px;
+            height: 65px;
+            left: 65%;
+            animation-duration: 11s;
+            animation-delay: 3s;
+        }
+
+        .bubble:nth-child(6) {
+            width: 55px;
+            height: 55px;
+            left: 75%;
+            animation-duration: 15s;
+            animation-delay: 2s;
+        }
+
+        .bubble:nth-child(7) {
+            width: 45px;
+            height: 45px;
+            left: 90%;
+            animation-duration: 9s;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translateY(-800px) rotate(180deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-1600px) rotate(360deg);
+                opacity: 0.5;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                padding: 35px 25px;
+                max-width: 90%;
+            }
+            
+            .logo {
+                font-size: 42px;
+            }
+            
+            .dev-cards {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                padding-top: 80px;
+                padding-bottom: 80px;
+            }
+            
+            .container {
+                padding: 30px 20px;
+                max-width: 95%;
+                border-radius: var(--border-radius-md);
+            }
+            
+            .logo {
+                font-size: 38px;
+            }
+            
+            .description {
+                font-size: 16px;
+            }
+            
+            .features {
+                gap: 10px;
+            }
+            
+            .feature {
+                margin: 0 5px;
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+            
+            .btn {
+                font-size: 16px;
+                padding: 12px 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 10px;
+                padding-top: 70px;
+                padding-bottom: 70px;
+            }
+            
+            .container {
+                padding: 25px 15px;
+                border-radius: var(--border-radius-sm);
+            }
+            
+            .logo {
+                font-size: 32px;
+            }
+            
+            .description {
+                font-size: 14px;
+            }
+            
+            .top-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                font-size: 16px;
+                padding: 12px 20px;
+            }
+            
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .feature {
+                width: 100%;
+                margin: 5px 0;
+                justify-content: center;
+            }
+            
+            .dev-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .dev-card {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <div class="container">
+        <h1 class="logo">public chat</h1>
+        <p class="description">مرحبا بك في أفضل منصة دردشة متكاملة! استمتع بتجربة فريدة مع جميع المزايا التي تحتاجها للتواصل بشكل مميز.</p>
+        
+        <div class="features">
+            <div class="feature">
+                <span>دردشة فورية</span>
+                <i style="padding-inline: 5px;" class="fas fa-comments"></i>
+            </div>
+            <div class="feature">
+                <span>مشاركة الصور</span>
+                <i style="padding-inline: 5px;" class="fas fa-images"></i>
+            </div>
+            <div class="feature">
+                <span>تسجيل صوتي</span>
+                <i style="padding-inline: 5px;" class="fas fa-microphone"></i>
+            </div>
+            <div class="feature">
+                <span>مشاركة الفيديو</span>
+                <i style="padding-inline: 5px;" class="fas fa-video"></i>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <div class="top-buttons">
+                <a href="/login" class="btn btn-secondary">
+                    <span>تسجيل الدخول</span>
+                    <i style="padding-inline: 5px;" class="fas fa-sign-in-alt"></i>
+                </a>
+                <a href="/signup" class="btn btn-secondary">
+                    <span>إنشاء حساب</span>
+                    <i style="padding-inline: 5px;" class="fas fa-user-plus"></i>
+                </a>
+                <a href="/soon" download class="btn btn-secondary">
+                   <span>تحميل</span>
+                   <i style="padding-inline: 5px;" class="fas fa-download"></i>
+                </a>
+            </div>
+            <a href="/chat" class="btn btn-large">
+                <span>الدخول إلى الدردشة</span>
+                <i style="padding-inline: 5px;" class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+        
+    
+    <div class="container developers">
+        <h3>فريق الدعم</h3>
+        <div class="dev-cards">
+            <a href="https://discord.com/users/1099039269391171765" class="dev-card">
+                <img src="pics/coder.png" alt="coder">
+                <h4>coder.gg</h4>
+                <p>مبرمج عام</p>
+            </a>
+            <a href="https://discord.com/users/845374453939568720" class="dev-card">
+                <img src="pics/hasan.png" alt="hasan">
+                <h4>hasan</h4>
+                <p>مطور السيرفر</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
