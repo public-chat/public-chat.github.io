@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://public-chat.github.io/sitemap.xml
